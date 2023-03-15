@@ -2,14 +2,17 @@ package com.blog.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /*
 * 统一结果集封装
+*
+* 这是因为要缓存的 JAVA 对象必须实现`Serializable`接口，因为 Spring 会先将对象序列化再存入 Redis，将缓存实体类继承`Serializable`
 * */
 @Data
-public class Result<T> {
+public class Result<T> implements Serializable {
     private Integer code;//1:true 0:false
     private String msg;//error message
     private T data;//数据

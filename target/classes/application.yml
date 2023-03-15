@@ -6,6 +6,12 @@ spring:
     url: jdbc:mysql://localhost:3306/reggie?serverTimezone=UTC
     username: root
     password: 5201314lmj
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    redis:
+      time-to-live: 3600000
   mvc:
     hiddenmethod:
       filter:
@@ -16,4 +22,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 reggie:
   path: F:\\reggie\\img\\
+
+
 

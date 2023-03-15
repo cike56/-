@@ -19,6 +19,8 @@ import com.blog.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,10 @@ import java.util.stream.Collectors;
 
 /*
 * 6. 控制层
+*
+* 修改 SetmealController 的 save、update 和 status 方法，加入清理缓存的逻辑
+ *    实现手段也只需要加上`@CacheEvict`注解，该注解的功能是：将一条或者多条数据从缓存中删除
+ *
 * */
 
 @RestController
@@ -45,6 +51,7 @@ public class SetmealController {
 
     //添加套餐
     @PostMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public Result<String> save(@RequestBody SetmealDto setmealDto) {
         log.info("套餐信息：{}", setmealDto);
         setmealService.saveWithDish(setmealDto);
@@ -97,6 +104,7 @@ public class SetmealController {
 
     //移动端回显套餐数据
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public Result<List<Setmeal>> list(Setmeal setmeal) {
         //条件构造器
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
@@ -133,6 +141,7 @@ public class SetmealController {
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public Result<String> status(@PathVariable String status, @RequestParam List<Long> ids) {
         LambdaUpdateWrapper<Setmeal> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.in(Setmeal::getId, ids);
@@ -157,6 +166,10 @@ public class SetmealController {
     }
 
     @PutMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)
+    /*
+    *     该注解的功能是：在方法执行前，Spring 先查看缓存中是否有数据；如果有数据，则直接返回缓存数据；若没有数据，调用方法并将方法返回值放到缓存中
+    * */
         public Result<Setmeal> updateWithDish(@RequestBody SetmealDto setmealDto) {
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
         Long setmealId = setmealDto.getId();

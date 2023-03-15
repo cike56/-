@@ -22,22 +22,24 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
-
+//http://localhost:8888/front/page/login.html 移动端登录
     //发送邮件
     @PostMapping("/sendMsg")
     public Result<String> sendMsg(@RequestBody User user, HttpSession session) throws MessagingException {
-        String phone = user.getPhone();
-        if (!phone.isEmpty()) {
+//        String phone = user.getPhone();
+        String phone = "504492019@qq.com";
+        String code = "admin";
+//        if (phone.equals("123456")) {
             //随机生成一个验证码
-            String code = MailUtils.achieveCode();
+//            String code = MailUtils.achieveCode();
             log.info(code);
             //这里的phone其实就是邮箱，code是我们生成的验证码
 //            MailUtils.sendTestMail(phone, code);
             //验证码存session，方便后面拿出来比对
             session.setAttribute(phone, code);
             return Result.success("验证码发送成功");
-        }
-        return Result.error("验证码发送失败");
+//        }
+//        return Result.error("验证码发送失败");
     }
 
     //json:com.blog.controller.UserController : {phone=504492019@qq.com, code=bxQCK}
