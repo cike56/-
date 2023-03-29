@@ -19,7 +19,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         log.info(metaObject.toString());
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime", LocalDateTime.now());
-        //添加设置添加人id
+        //添加设置添加人id 从线程变量中获取
         metaObject.setValue("updateUser", BaseContext.getCurrentId());
         metaObject.setValue("createUser", BaseContext.getCurrentId());
     }
