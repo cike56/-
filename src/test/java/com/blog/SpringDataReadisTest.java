@@ -26,10 +26,11 @@ public class SpringDataReadisTest {
         String cike567 = (String) redisTemplate.opsForValue().get("cike567");
         System.out.println(cike567);
 
-        redisTemplate.opsForValue().set("age","18",10, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("age","18",20, TimeUnit.SECONDS);
         String age = (String) redisTemplate.opsForValue().get("age");
         System.out.println(age);
 
+        //没有cike567则存入一条数据
         Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent("cike567", "feiniao");
         System.out.println(aBoolean);
     }

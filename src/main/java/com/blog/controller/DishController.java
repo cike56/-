@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -173,8 +174,8 @@ public class DishController {
             return dishDto;
 
         }).collect(Collectors.toList());
-
-        redisTemplate.opsForValue().set(key,dishDtoList,60, TimeUnit.MINUTES);
+        String s = JSON.toJSONString(dishDtoList);//此处必须把集合序列化成json格式才能存入
+        redisTemplate.opsForValue().set(key,s,60, TimeUnit.MINUTES);
         return Result.success(dishDtoList);
     }
 
